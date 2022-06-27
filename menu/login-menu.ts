@@ -184,8 +184,9 @@ export class LoginMenu {
             console.log('3. Thêm dịch vụ ');
             console.log('4. Hiển thị danh sách dịch vụ');
             console.log('5. Nạp tiền');
-            console.log('6. Danh sách máy')
-            console.log('7. Bật tắt máy')
+            console.log('6. Danh sách máy');
+            console.log('7. Bật tắt máy');
+            console.log('8. Đổi mật khẩu');
             console.log('0. Đăng xuất');
             choice = +rl.question('Nhập lựa chọn của bạn: ');
             switch (choice) {
@@ -218,6 +219,12 @@ export class LoginMenu {
                 case 7:
                     console.log('---Danh sách máy---');
                     this.changeStatus();
+                    break;
+                case 8:
+                    console.log('---Đổi mật khẩu---');
+                    this.changePassword();
+                    break;
+                default:
                     break;
             }
         }
@@ -277,6 +284,43 @@ export class LoginMenu {
         }
     }
 
+    //Danh sách máy
+    showAllMachine() {
+        let machine = this.machine.getAll();
+        for(let i = 0; i < machine.length; i++){
+            console.log(`${i}, tên máy: ${machine[i].name}, trạng thái: ${machine[i].status}`);
+        }
+    }
+
+    //Bật tắt máy
+    changeStatus() {
+        let choice: number = -1;
+        let machine = this.machine.getAll();
+        for(let i = 0; i < machine.length; i++){
+            console.log(`${i}, tên máy: ${machine[i].name}, trạng thái: ${machine[i].status}`);
+        }
+        console.log('1. bật, tắt máy')
+        choice = +rl.question('Mời nhập lựa chọn: ')
+        switch (choice) {
+            case 1:
+                let machieName = rl.question('Nhập tên máy muốn bật, tắt: ');
+                this.machine.convertStatus(machieName);
+                break;
+        }
+    }
+
+    changePassword() {
+        let nameAccount = rl.question('Nhập tên tài khoản: ');
+        let findNameAccount = this.userManager.findByNameAccount(nameAccount);
+        if(findNameAccount) {
+            let newPassword = rl.question('nhập mật khẩu mới: ');
+            findNameAccount.password = nameAccount;
+            console.log('Đổi mật khẩu thành công!');
+        }else {
+            console.log('Bạn nhập sai tên tài khoản!')
+        }
+    }
+
     //End menu admin
 
     //Open menu User
@@ -284,18 +328,22 @@ export class LoginMenu {
         let choice = -1
         do {
             console.log('---Xin mời chọn dịch vụ---');
-            console.log('1. Gọi dịch vụ');
-            console.log('2. Giỏ hàng');
+            console.log('1. Thông tin tài khoản của tôi')
+            console.log('2. Gọi dịch vụ');
+            console.log('3. Giỏ hàng');
             console.log('0. Đăng xuất');
 
-            choice = +rl.question('Nhập lựa chọn của bạn: \n')
+            choice = +rl.question('Nhập lựa chọn của bạn: ')
 
             switch (choice) {
                 case 1:
+                    console.log('---Tài khoản của tôi---');
+                    this.userManager.getAll();
+                case 2:
                     console.log('---Danh sách dịch vụ---');
                     this.selectService();
                     break;
-                case 2:
+                case 3:
                     this.pay();
                     break;
             }
@@ -355,35 +403,4 @@ export class LoginMenu {
         };
     }
 
-
-    //Danh sách máy
-    showAllMachine() {
-        let machine = this.machine.getAll();
-        for(let i = 0; i < machine.length; i++){
-            console.log(`${i}, tên máy: ${machine[i].name}, trạng thái: ${machine[i].status}`);
-        }
-    }
-
-    //Bật tắt máy
-    changeStatus() {
-        let choice: number = -1;
-        let machine = this.machine.getAll();
-        for(let i = 0; i < machine.length; i++){
-            console.log(`${i}, tên máy: ${machine[i].name}, trạng thái: ${machine[i].status}`);
-        }
-
-        console.log('1. bật, tắt máy')
-        choice = +rl.question('Mời nhập lựa chọn: ')
-        switch (choice) {
-            case 1:
-                let findMachie = rl.question('Nhập tên máy muốn bật, tắt: ');
-                this.machine.findByName(findMachie);
-                if (findMachie) {
-                    this.machine.convertStatus(findMachie);
-                    console.log('Thành công!')
-                }else {
-                    console.log('Bạn nhập sai tên máy!!')
-                }
-        }
-    }
 }

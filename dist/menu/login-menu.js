@@ -31,6 +31,7 @@ const Role_1 = require("../model/Role");
 const ServiceManager_1 = require("../management/service/ServiceManager");
 const Service_1 = require("../model/Service");
 const Cart_1 = require("../model/Cart");
+const MachineManagement_1 = require("../management/machine/MachineManagement");
 var LoginChoice;
 (function (LoginChoice) {
     LoginChoice[LoginChoice["LOGIN"] = 1] = "LOGIN";
@@ -41,6 +42,7 @@ class LoginMenu {
         this.userManager = new UserManager_1.UserManager();
         this.serviceManager = new ServiceManager_1.ServiceManager();
         this.cart = new Cart_1.Cart();
+        this.machine = new MachineManagement_1.MachineManagement();
     }
     run() {
         let choice = -1;
@@ -49,7 +51,7 @@ class LoginMenu {
             console.log('1. Đăng nhập');
             console.log('2. Đăng ký');
             console.log('0. Thoát');
-            choice = +rl.question('Nhập lựa chọn của bạn: \n');
+            choice = +rl.question('Nhập lựa chọn của bạn: ');
             switch (choice) {
                 case LoginChoice.LOGIN: {
                     console.log('---Đăng nhập---');
@@ -196,6 +198,9 @@ class LoginMenu {
             console.log('3. Thêm dịch vụ ');
             console.log('4. Hiển thị danh sách dịch vụ');
             console.log('5. Nạp tiền');
+            console.log('6. Danh sách máy');
+            console.log('7. Bật tắt máy');
+            console.log('8. Đổi mật khẩu');
             console.log('0. Đăng xuất');
             choice = +rl.question('Nhập lựa chọn của bạn: ');
             switch (choice) {
@@ -218,8 +223,22 @@ class LoginMenu {
                 case 5:
                     console.log('---Nạp tiền---');
                     this.recharge();
+                    break;
+                case 6:
+                    console.log('---Danh sách máy---');
+                    this.showAllMachine();
+                    break;
+                case 7:
+                    console.log('---Danh sách máy---');
+                    this.changeStatus();
+                    break;
+                case 8:
+                    console.log('---Đổi mật khẩu---');
+                    this.changePassword();
+                    break;
+                default:
+                    break;
             }
-            ;
         } while (choice != 0);
     }
     //Hiển thị danh sách người dùng
@@ -272,22 +291,61 @@ class LoginMenu {
             console.log('Không tìm thấy tài khoản!');
         }
     }
+    //Danh sách máy
+    showAllMachine() {
+        let machine = this.machine.getAll();
+        for (let i = 0; i < machine.length; i++) {
+            console.log(`${i}, tên máy: ${machine[i].name}, trạng thái: ${machine[i].status}`);
+        }
+    }
+    //Bật tắt máy
+    changeStatus() {
+        let choice = -1;
+        let machine = this.machine.getAll();
+        for (let i = 0; i < machine.length; i++) {
+            console.log(`${i}, tên máy: ${machine[i].name}, trạng thái: ${machine[i].status}`);
+        }
+        console.log('1. bật, tắt máy');
+        choice = +rl.question('Mời nhập lựa chọn: ');
+        switch (choice) {
+            case 1:
+                let machieName = rl.question('Nhập tên máy muốn bật, tắt: ');
+                this.machine.convertStatus(machieName);
+                break;
+        }
+    }
+    changePassword() {
+        let nameAccount = rl.question('Nhập tên tài khoản: ');
+        let findNameAccount = this.userManager.findByNameAccount(nameAccount);
+        if (findNameAccount) {
+            let newPassword = rl.question('nhập mật khẩu mới: ');
+            findNameAccount.password = nameAccount;
+            console.log('Đổi mật khẩu thành công!');
+        }
+        else {
+            console.log('Bạn nhập sai tên tài khoản!');
+        }
+    }
     //End menu admin
     //Open menu User
     menuUser() {
         let choice = -1;
         do {
             console.log('---Xin mời chọn dịch vụ---');
-            console.log('1. Gọi dịch vụ');
-            console.log('2. Giỏ hàng');
+            console.log('1. Thông tin tài khoản của tôi');
+            console.log('2. Gọi dịch vụ');
+            console.log('3. Giỏ hàng');
             console.log('0. Đăng xuất');
-            choice = +rl.question('Nhập lựa chọn của bạn: \n');
+            choice = +rl.question('Nhập lựa chọn của bạn: ');
             switch (choice) {
                 case 1:
+                    console.log('---Tài khoản của tôi---');
+                    this.userManager.getAll();
+                case 2:
                     console.log('---Danh sách dịch vụ---');
                     this.selectService();
                     break;
-                case 2:
+                case 3:
                     this.pay();
                     break;
             }
