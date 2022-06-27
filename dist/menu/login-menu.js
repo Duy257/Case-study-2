@@ -27,6 +27,10 @@ exports.LoginMenu = void 0;
 const UserManager_1 = require("../management/user/UserManager");
 const rl = __importStar(require("readline-sync"));
 const User_1 = require("../model/User");
+const Role_1 = require("../model/Role");
+const ServiceManager_1 = require("../management/service/ServiceManager");
+const Service_1 = require("../model/Service");
+const Cart_1 = require("../model/Cart");
 var LoginChoice;
 (function (LoginChoice) {
     LoginChoice[LoginChoice["LOGIN"] = 1] = "LOGIN";
@@ -35,18 +39,22 @@ var LoginChoice;
 class LoginMenu {
     constructor() {
         this.userManager = new UserManager_1.UserManager();
+        this.serviceManager = new ServiceManager_1.ServiceManager();
+        this.cart = new Cart_1.Cart();
     }
     run() {
         let choice = -1;
         do {
-            console.log('---Hệ thống quản lý sản phẩm---');
+            console.log('---Chào mừng đến với net DUY NGUYỄN---');
             console.log('1. Đăng nhập');
             console.log('2. Đăng ký');
             console.log('0. Thoát');
-            choice = +rl.question('Nhập lựa chọn của bạn:');
+            choice = +rl.question('Nhập lựa chọn của bạn: \n');
             switch (choice) {
                 case LoginChoice.LOGIN: {
                     console.log('---Đăng nhập---');
+                    this.loginForm();
+                    break;
                 }
                 case LoginChoice.REGISTER: {
                     console.log('---Đăng ký tài khoản---');
@@ -59,8 +67,13 @@ class LoginMenu {
     //Open đăng kí
     registerForm() {
         let user = this.iputUser();
-        this.userManager.add(user);
-        console.log('Đăng kí thành công!');
+        if (user != null) {
+            this.userManager.add(user);
+            console.log('Đăng kí thành công!');
+        }
+        else {
+            console.log('Đăng kí thất bại!');
+        }
     }
     iputUser() {
         let userName = this.inputUserName();
@@ -69,6 +82,10 @@ class LoginMenu {
         this.inputConfirmPassword(passWord);
         let name = rl.question('Nhập tên của bạn: ');
         let age = this.inputAge();
+        if (age < 18) {
+            console.log('Bạn chưa đủ tuổi đi nét!');
+            return null;
+        }
         let email = this.inputEmail();
         return new User_1.User(userName, passWord, name, age, email);
     }
@@ -115,8 +132,12 @@ class LoginMenu {
             }
         } while (confirmPassword != password);
     }
-    //    End đăng kí
-    //Open check Email
+    // nhập tuổi
+    inputAge() {
+        let age = +rl.question('Nhập tuổi của bạn: ');
+        return age;
+    }
+    //nhập email
     inputEmail() {
         let email = '';
         let isValidEmail = true;
@@ -140,21 +161,188 @@ class LoginMenu {
         } while (!isValidEmail);
         return email;
     }
-    // nhập tuổi
-    inputAge() {
-        let age;
-        let isValidAge = true;
+    //    End đăng kí
+    //    Open đăng nhập
+    loginForm() {
+        let choice = true;
         do {
-            age = +rl.question('Nhập tuổi của bạn: ');
-            if (age < 18) {
-                isValidAge = false;
-                console.log('Bạn chưa đủ tuổi chơi net!');
+            let nameAccount = rl.question('Nhập tài khoản: ');
+            let password = rl.question('Nhập mật khẩu: ');
+            let currentUser = this.userManager.login(nameAccount, password);
+            if (currentUser) {
+                console.log('Đăng nhập thành công!');
+                if (currentUser.role == Role_1.role.ADMIN) {
+                    //mở menu admin
+                    this.menuAdmin();
+                }
+                else {
+                    //mở menu user
+                    this.menuUser();
+                }
             }
             else {
-                isValidAge = true;
+                console.log('Tài khoản hoặc mật khẩu không đúng!');
+                choice = false;
             }
-        } while (!isValidAge);
-        return age;
+        } while (!choice);
+    }
+    //Menu admin
+    menuAdmin() {
+        let choice = -1.;
+        do {
+            console.log('---Đây là giao diện Admin---');
+            console.log('1. Hiển thị danh sách người dùng ');
+            console.log('2. Tìm kiếm người dùng');
+            console.log('3. Thêm dịch vụ ');
+            console.log('4. Hiển thị danh sách dịch vụ');
+            console.log('5. Nạp tiền');
+            console.log('0. Đăng xuất');
+            choice = +rl.question('Nhập lựa chọn của bạn: ');
+            switch (choice) {
+                case 1:
+                    console.log('---Danh sách người dùng---');
+                    this.showAllUser();
+                    break;
+                case 2:
+                    console.log('---Tìm kiếm---');
+                    this.search();
+                    break;
+                case 3:
+                    console.log('---Thêm dịch vụ---');
+                    this.addService();
+                    break;
+                case 4:
+                    console.log('---Hiển thị danh sách dịch vụ---');
+                    this.showAllService();
+                    break;
+                case 5:
+                    console.log('---Nạp tiền---');
+                    this.recharge();
+            }
+            ;
+        } while (choice != 0);
+    }
+    //Hiển thị danh sách người dùng
+    showAllUser() {
+        let user = this.userManager.getAll();
+        for (let i = 0; i < user.length; i++) {
+            console.log(`id: ${user[i].id}, Tên tài khoản: ${user[i].nameAccount}, email: ${user[i].email}, thời gian: ${user[i].time}`);
+        }
+    }
+    //Tìm kiếm người dùng
+    search() {
+        let search = rl.question('Nhập tên muốn tìm kiếm: ');
+        let searchAccount = this.userManager.findByNameAccount(search);
+        if (searchAccount) {
+            console.log('---Tài khoản cần tìm---');
+            console.log(searchAccount);
+        }
+        else {
+            console.log('Không tìm thấy tài khoản!');
+        }
+    }
+    //Thêm dịch vụ
+    addService() {
+        let name = rl.question('Nhập tên dịch vụ: ');
+        let price = +rl.question('Nhập giá dịch vụ: ');
+        let service = new Service_1.Service(name, price);
+        this.serviceManager.add(service);
+        console.log('Thêm dịch vụ thành công!');
+    }
+    //Hiển thị danh sách dịch vụ
+    showAllService() {
+        console.log('---Danh sách dịch vụ---');
+        let service = this.serviceManager.getAll();
+        for (let i = 0; i < service.length; i++) {
+            console.log(`  id: ${service[i].id}, Tên: ${service[i].name}, Giá: ${service[i].price}`);
+        }
+    }
+    //Nạp tiền
+    recharge() {
+        let nameAccount = rl.question('Nhập tên tài khoản: ');
+        let user = this.userManager.findByNameAccount(nameAccount);
+        if (user) {
+            let time = 0;
+            let input = +rl.question('Nhập số tiền muốn nạp: ');
+            time += (input / 166.666);
+            user.time = time;
+            console.log('Nạp thành công!');
+        }
+        else {
+            console.log('Không tìm thấy tài khoản!');
+        }
+    }
+    //End menu admin
+    //Open menu User
+    menuUser() {
+        let choice = -1;
+        do {
+            console.log('---Xin mời chọn dịch vụ---');
+            console.log('1. Gọi dịch vụ');
+            console.log('2. Giỏ hàng');
+            console.log('0. Đăng xuất');
+            choice = +rl.question('Nhập lựa chọn của bạn: \n');
+            switch (choice) {
+                case 1:
+                    console.log('---Danh sách dịch vụ---');
+                    this.selectService();
+                    break;
+                case 2:
+                    this.pay();
+                    break;
+            }
+        } while (choice != 0);
+    }
+    //Gọi dịch vụ
+    selectService() {
+        let service = this.serviceManager.getAll();
+        for (let i = 0; i < service.length; i++) {
+            console.log(`${i}. Tên: ${service[i].name}, Giá: ${service[i].price}`);
+        }
+        let select = rl.question('mời bạn nhập tên dịch vụ muốn chọn: ');
+        let findService = this.serviceManager.findByName(select);
+        if (findService) {
+            this.cart.add(findService);
+            console.log('Thêm thành công!');
+        }
+        else {
+            console.log('Không tìm thấy sản phẩm!');
+        }
+    }
+    //Thanh toán
+    pay() {
+        let total = this.cart.totalMoney;
+        let choice = -1;
+        console.log('---Giỏ hàng của bạn---');
+        let cart = this.cart.arrService;
+        for (let i = 0; i < cart.length; i++) {
+            console.log(`${i} Tên: ${cart[i].name}, Giá: ${cart[i].price}`);
+        }
+        ;
+        console.log(`Tổng tiền: ${total}`);
+        console.log();
+        console.log('---Tuỳ chọn---');
+        console.log('1. Xoá dịch vụ');
+        console.log('2. Thanh toán');
+        console.log('0. Quay lại');
+        choice = +rl.question('Nhập lựa chọn của ban: ');
+        switch (choice) {
+            case 1:
+                let name = rl.question('Nhập tên dịch vụ muốn xoá: ');
+                let currenName = this.cart.findByName(name);
+                if (currenName) {
+                    this.cart.remove(currenName);
+                    console.log('xoá thành công!');
+                }
+                else {
+                    console.log('Không tìm thấy sản phẩm!');
+                }
+                break;
+            case 2:
+                console.log('THANH TOÁN THÀNH CÔNG!!');
+                break;
+        }
+        ;
     }
 }
 exports.LoginMenu = LoginMenu;

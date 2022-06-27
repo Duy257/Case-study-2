@@ -7,6 +7,7 @@ export class User {
     private _age: number;
     private _email: string;
     private _role: number = 0;
+    private _time: number = 0;
 
 
     constructor(nameAccount: string, password: string, name: string, age: number, email: string) {
@@ -71,5 +72,13 @@ export class User {
 
     set email(value: string) {
         this._email = value;
+    }
+
+    get time(): number {
+        return this._time;
+    }
+
+    set time(value: number) {
+        this._time = value;
     }
 }

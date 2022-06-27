@@ -5,6 +5,7 @@ class User {
     constructor(nameAccount, password, name, age, email) {
         this._id = 0;
         this._role = 0;
+        this._time = 0;
         this._nameAccount = nameAccount;
         this._password = password;
         this._name = name;
@@ -52,6 +53,12 @@ class User {
     }
     set email(value) {
         this._email = value;
+    }
+    get time() {
+        return this._time;
+    }
+    set time(value) {
+        this._time = value;
     }
 }
 exports.User = User;
