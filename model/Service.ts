@@ -2,7 +2,7 @@ export class Service {
     private _id: number = 0;
     private _name: string;
     private _price: number;
-    private _amount: number = 0;
+    private _amount: number = 0; 
 
 
     constructor(name: string, price: number) {

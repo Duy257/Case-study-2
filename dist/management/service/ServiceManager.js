@@ -30,6 +30,15 @@ class ServiceManager {
         }
         return null;
     }
+    findById(id) {
+        for (let i = 0; i < ServiceManager.arr.length; i++) {
+            if (id == ServiceManager.arr[i].id) {
+                return ServiceManager.arr[i];
+            }
+        }
+        return null;
+    }
+    ;
 }
 exports.ServiceManager = ServiceManager;
 ServiceManager.arr = [];

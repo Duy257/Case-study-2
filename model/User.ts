@@ -1,3 +1,5 @@
+import {Cart} from "./Cart";
+import {Service} from "./Service";
 
 export class User {
     private _id: number = 0;
@@ -8,6 +10,8 @@ export class User {
     private _email: string;
     private _role: number = 0;
     private _time: number = 0;
+    private _cart = new Cart()
+    private idCart: number = 0;
 
 
     constructor(nameAccount: string, password: string, name: string, age: number, email: string) {
@@ -81,4 +85,19 @@ export class User {
     set time(value: number) {
         this._time = value;
     }
+
+    get cart(): Cart {
+        return this._cart;
+    }
+
+    set cart(value: Cart) {
+        this._cart = value;
+    }
+
+    addToCart(t: Service) {
+        let id = this.idCart++;
+        t.id = id;
+        this._cart.add(t);
+    }
+
 }

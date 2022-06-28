@@ -1,6 +1,7 @@
 import {User} from "../../model/User";
 import {role} from "../../model/Role";
 import {IUserManagement} from "./I-userManagement";
+import {Service} from "../../model/Service";
 
 
 export class UserManager implements IUserManagement {
@@ -81,5 +82,7 @@ export class UserManager implements IUserManagement {
         }
         return null;
     }
+
+
 
 }

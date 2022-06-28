@@ -32,6 +32,7 @@ const ServiceManager_1 = require("../management/service/ServiceManager");
 const Service_1 = require("../model/Service");
 const Cart_1 = require("../model/Cart");
 const MachineManagement_1 = require("../management/machine/MachineManagement");
+// import {ReadFileAccount} from "../model/ReadFileAccount";
 var LoginChoice;
 (function (LoginChoice) {
     LoginChoice[LoginChoice["LOGIN"] = 1] = "LOGIN";
@@ -41,9 +42,9 @@ class LoginMenu {
     constructor() {
         this.userManager = new UserManager_1.UserManager();
         this.serviceManager = new ServiceManager_1.ServiceManager();
-        this.cart = new Cart_1.Cart();
         this.machine = new MachineManagement_1.MachineManagement();
     }
+    // private readToFileAccount = new ReadFileAccount();
     run() {
         let choice = -1;
         do {
@@ -71,6 +72,7 @@ class LoginMenu {
         let user = this.iputUser();
         if (user != null) {
             this.userManager.add(user);
+            // this.readToFileAccount.writeToFile(user);
             console.log('Đăng kí thành công!');
         }
         else {
@@ -180,6 +182,7 @@ class LoginMenu {
                 else {
                     //mở menu user
                     this.menuUser();
+                    let user = currentUser;
                 }
             }
             else {
@@ -281,10 +284,8 @@ class LoginMenu {
         let nameAccount = rl.question('Nhập tên tài khoản: ');
         let user = this.userManager.findByNameAccount(nameAccount);
         if (user) {
-            let time = 0;
             let input = +rl.question('Nhập số tiền muốn nạp: ');
-            time += (input / 166.666);
-            user.time = time;
+            user.time += Math.floor((input / 166.666));
             console.log('Nạp thành công!');
         }
         else {
@@ -346,6 +347,7 @@ class LoginMenu {
                     this.selectService();
                     break;
                 case 3:
+                    console.log('---Giỏ hàng của bạn---');
                     this.pay();
                     break;
             }
@@ -357,10 +359,9 @@ class LoginMenu {
         for (let i = 0; i < service.length; i++) {
             console.log(`${i}. Tên: ${service[i].name}, Giá: ${service[i].price}`);
         }
-        let select = rl.question('mời bạn nhập tên dịch vụ muốn chọn: ');
-        let findService = this.serviceManager.findByName(select);
+        let select = +rl.question('Nhập dịch vụ bạ chọn: ');
+        let findService = this.serviceManager.findById(select);
         if (findService) {
-            this.cart.add(findService);
             console.log('Thêm thành công!');
         }
         else {
@@ -369,10 +370,9 @@ class LoginMenu {
     }
     //Thanh toán
     pay() {
-        let total = this.cart.totalMoney;
+        let total = LoginMenu.cart.totalMoney;
         let choice = -1;
-        console.log('---Giỏ hàng của bạn---');
-        let cart = this.cart.arrService;
+        let cart = LoginMenu.cart.arrService;
         for (let i = 0; i < cart.length; i++) {
             console.log(`${i} Tên: ${cart[i].name}, Giá: ${cart[i].price}`);
         }
@@ -387,9 +387,9 @@ class LoginMenu {
         switch (choice) {
             case 1:
                 let name = rl.question('Nhập tên dịch vụ muốn xoá: ');
-                let currenName = this.cart.findByName(name);
+                let currenName = LoginMenu.cart.findByName(name);
                 if (currenName) {
-                    this.cart.remove(currenName);
+                    LoginMenu.cart.remove(currenName);
                     console.log('xoá thành công!');
                 }
                 else {
@@ -404,3 +404,4 @@ class LoginMenu {
     }
 }
 exports.LoginMenu = LoginMenu;
+LoginMenu.cart = new Cart_1.Cart();

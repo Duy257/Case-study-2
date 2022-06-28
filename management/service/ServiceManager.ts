@@ -36,4 +36,13 @@ export class ServiceManager {
          }
          return null;
      }
+
+     findById(id: number): Service | null {
+         for (let i = 0; i < ServiceManager.arr.length; i++) {
+             if (id == ServiceManager.arr[i].id) {
+                 return ServiceManager.arr[i]
+             }
+         }
+         return null;
+     };
 }

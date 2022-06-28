@@ -6,6 +6,7 @@ import {ServiceManager} from "../management/service/ServiceManager";
 import {Service} from "../model/Service";
 import {Cart} from "../model/Cart";
 import {MachineManagement} from "../management/machine/MachineManagement";
+// import {ReadFileAccount} from "../model/ReadFileAccount";
 
 enum LoginChoice {
     LOGIN = 1,
@@ -14,8 +15,9 @@ enum LoginChoice {
 export class LoginMenu {
     private userManager = new UserManager();
     private serviceManager = new ServiceManager();
-    private cart = new Cart();
+    private static cart = new Cart();
     private machine = new MachineManagement();
+    // private readToFileAccount = new ReadFileAccount();
 
     run() {
         let choice = -1;
@@ -45,6 +47,7 @@ export class LoginMenu {
         let user = this.iputUser();
         if (user != null) {
             this.userManager.add(user)
+            // this.readToFileAccount.writeToFile(user);
             console.log('Đăng kí thành công!')
         } else {
             console.log('Đăng kí thất bại!')
@@ -146,8 +149,8 @@ export class LoginMenu {
         while (!isValidEmail);
         return email;
     }
-
 //    End đăng kí
+
 
 //    Open đăng nhập
     loginForm() {
@@ -164,7 +167,9 @@ export class LoginMenu {
                     this.menuAdmin();
                 } else {
                     //mở menu user
-                    this.menuUser()
+                    this.menuUser();
+                    let user = currentUser;
+
                 }
             } else {
                 console.log('Tài khoản hoặc mật khẩu không đúng!');
@@ -257,7 +262,7 @@ export class LoginMenu {
         let price: number = +rl.question('Nhập giá dịch vụ: ');
         let service = new Service(name, price);
         this.serviceManager.add(service);
-        console.log('Thêm dịch vụ thành công!')
+        console.log('Thêm dịch vụ thành công!');
 
     }
 
@@ -274,13 +279,11 @@ export class LoginMenu {
         let nameAccount: string = rl.question('Nhập tên tài khoản: ');
         let user = this.userManager.findByNameAccount(nameAccount);
         if (user) {
-            let time: number = 0;
             let input: number = +rl.question('Nhập số tiền muốn nạp: ');
-            time += (input / 166.666);
-            user.time = time;
-            console.log('Nạp thành công!')
+            user.time += Math.floor((input / 166.666));
+            console.log('Nạp thành công!');
         }else {
-            console.log('Không tìm thấy tài khoản!')
+            console.log('Không tìm thấy tài khoản!');
         }
     }
 
@@ -344,6 +347,7 @@ export class LoginMenu {
                     this.selectService();
                     break;
                 case 3:
+                    console.log('---Giỏ hàng của bạn---')
                     this.pay();
                     break;
             }
@@ -358,10 +362,10 @@ export class LoginMenu {
         for(let i = 0; i < service.length; i++) {
             console.log(`${i}. Tên: ${service[i].name}, Giá: ${service[i].price}`);
         }
-        let select = rl.question('mời bạn nhập tên dịch vụ muốn chọn: ');
-        let findService = this.serviceManager.findByName(select);
+        let select = +rl.question('Nhập dịch vụ bạ chọn: ');
+        let findService = this.serviceManager.findById(select);
         if (findService) {
-            this.cart.add(findService);
+
             console.log('Thêm thành công!')
         }else {
             console.log('Không tìm thấy sản phẩm!')
@@ -370,10 +374,9 @@ export class LoginMenu {
 
     //Thanh toán
     pay() {
-        let total = this.cart.totalMoney;
+        let total = LoginMenu.cart.totalMoney;
         let choice = -1;
-        console.log('---Giỏ hàng của bạn---')
-        let cart = this.cart.arrService;
+        let cart = LoginMenu.cart.arrService;
         for (let i = 0; i < cart.length; i++) {
             console.log(`${i} Tên: ${cart[i].name}, Giá: ${cart[i].price}`);
         };
@@ -389,9 +392,9 @@ export class LoginMenu {
         switch (choice) {
             case 1:
                 let name: string = rl.question('Nhập tên dịch vụ muốn xoá: ');
-                let currenName = this.cart.findByName(name);
+                let currenName = LoginMenu.cart.findByName(name);
                 if (currenName) {
-                    this.cart.remove(currenName);
+                    LoginMenu.cart.remove(currenName);
                     console.log('xoá thành công!')
                 }else {
                     console.log('Không tìm thấy sản phẩm!')
