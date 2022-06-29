@@ -55,4 +55,8 @@ export class Cart {
         }
         return totalMoney;
     }
+
+    findByIndex(index: number): Service {
+        return this._arrService[index];
+    }
 }

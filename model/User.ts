@@ -108,7 +108,13 @@ export class User {
     remove(index: number) {
         this._cart.remove(index);
     }
-
-
+    findToCart(index: number): Service | null{
+        let service = this._cart.findByIndex(index)
+        if (service) {
+            return service
+        }else {
+            return null;
+        }
+    }
 
 }

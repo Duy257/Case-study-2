@@ -80,5 +80,14 @@ class User {
     remove(index) {
         this._cart.remove(index);
     }
+    findToCart(index) {
+        let service = this._cart.findByIndex(index);
+        if (service) {
+            return service;
+        }
+        else {
+            return null;
+        }
+    }
 }
 exports.User = User;

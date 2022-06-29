@@ -48,5 +48,8 @@ class Cart {
         }
         return totalMoney;
     }
+    findByIndex(index) {
+        return this._arrService[index];
+    }
 }
 exports.Cart = Cart;

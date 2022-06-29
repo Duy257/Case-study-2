@@ -390,7 +390,8 @@ export class LoginMenu {
         console.log()
         console.log('---Tuỳ chọn---');
         console.log('1. Xoá dịch vụ');
-        console.log('2. Thanh toán');
+        console.log('2. Thay đổi số lượng')
+        console.log('3. Thanh toán');
         console.log('0. Quay lại');
 
         choice = +rl.question('Nhập lựa chọn của ban: ')
@@ -402,7 +403,18 @@ export class LoginMenu {
                 console.log('Xoá thành công!')
                 break;
             case 2:
-                console.log('THANH TOÁN THÀNH CÔNG!!')
+                let service = +rl.question('Sản phẩm muốn đổi: ');
+                let findToCart = user.findToCart(service);
+                if (findToCart) {
+                    let amount = +rl.question('Nhập số lượng muốn đổi: ');
+                    findToCart.amount = amount;
+                    console.log('Thay đổi thành công!');
+                }else {
+                    console.log('bạn nhập sai sản phẩm!');
+                }
+                break;
+            case 3:
+                console.log('THANH TOÁN THÀNH CÔNG!!');
                 break;
         };
     }
