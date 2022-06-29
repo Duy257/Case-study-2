@@ -339,7 +339,7 @@ export class LoginMenu {
             switch (choice) {
                 case 1:
                     console.log('---Tài khoản của tôi---');
-                    this.userManager.getAll();
+                    this.accountInformation(user1)
                 case 2:
                     console.log('---Danh sách dịch vụ---');
                     this.selectService(user1);
@@ -353,6 +353,11 @@ export class LoginMenu {
             }
         }
         while (choice != 0)
+    }
+
+    //thông tin tài khoản của tôi
+    accountInformation(user: User) {
+        console.log(`      Tên: ${user.nameAccount}\n      Mật khẩu: ${user.password}\n      Tên: ${user.name}\n      email: ${user.email}\n      Tuổi: ${user.age}\n      Thời gian: ${user.time}`)
     }
 
     //Gọi dịch vụ
