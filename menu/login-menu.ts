@@ -165,11 +165,11 @@ export class LoginMenu {
                 if (currentUser.role == role.ADMIN) {
                     //mở menu admin
                     this.menuAdmin();
+                    break;
                 } else {
                     //mở menu user
-                    this.menuUser();
-                    let user = currentUser;
-
+                    this.menuUser(currentUser);
+                    break;
                 }
             } else {
                 console.log('Tài khoản hoặc mật khẩu không đúng!');
@@ -228,8 +228,6 @@ export class LoginMenu {
                 case 8:
                     console.log('---Đổi mật khẩu---');
                     this.changePassword();
-                    break;
-                default:
                     break;
             }
         }
@@ -323,11 +321,11 @@ export class LoginMenu {
             console.log('Bạn nhập sai tên tài khoản!')
         }
     }
-
     //End menu admin
 
     //Open menu User
-    menuUser() {
+    menuUser(user: User) {
+        let user1 = user
         let choice = -1
         do {
             console.log('---Xin mời chọn dịch vụ---');
@@ -344,28 +342,31 @@ export class LoginMenu {
                     this.userManager.getAll();
                 case 2:
                     console.log('---Danh sách dịch vụ---');
-                    this.selectService();
+                    this.selectService(user1);
                     break;
                 case 3:
                     console.log('---Giỏ hàng của bạn---')
-                    this.pay();
+                    this.pay(user1);
+                    break;
+                default:
                     break;
             }
         }
         while (choice != 0)
-
     }
 
     //Gọi dịch vụ
-    selectService() {
+    selectService(user: User) {
         let service = this.serviceManager.getAll();
         for(let i = 0; i < service.length; i++) {
             console.log(`${i}. Tên: ${service[i].name}, Giá: ${service[i].price}`);
         }
         let select = +rl.question('Nhập dịch vụ bạ chọn: ');
-        let findService = this.serviceManager.findById(select);
+        let findService = this.serviceManager.FindByIndex(select);
         if (findService) {
-
+            let amount = +rl.question('Nhập số lượng: ');
+            findService.amount = amount;
+            user.addToCart(findService);
             console.log('Thêm thành công!')
         }else {
             console.log('Không tìm thấy sản phẩm!')
@@ -373,14 +374,14 @@ export class LoginMenu {
     }
 
     //Thanh toán
-    pay() {
-        let total = LoginMenu.cart.totalMoney;
+    pay(user: User) {
         let choice = -1;
-        let cart = LoginMenu.cart.arrService;
-        for (let i = 0; i < cart.length; i++) {
-            console.log(`${i} Tên: ${cart[i].name}, Giá: ${cart[i].price}`);
+        let service = user.getCart();
+        for (let i = 0; i < service.length; i++) {
+            console.log(`${i} Tên: ${service[i].name}, Giá: ${service[i].price}, số lượng: ${service[i].amount}`);
         };
-        console.log(`Tổng tiền: ${total}`)
+        let totalMoney = user.getTotalMoney();
+        console.log(`Tổng tiền: ${totalMoney}`);
         console.log()
         console.log('---Tuỳ chọn---');
         console.log('1. Xoá dịch vụ');
@@ -391,14 +392,9 @@ export class LoginMenu {
 
         switch (choice) {
             case 1:
-                let name: string = rl.question('Nhập tên dịch vụ muốn xoá: ');
-                let currenName = LoginMenu.cart.findByName(name);
-                if (currenName) {
-                    LoginMenu.cart.remove(currenName);
-                    console.log('xoá thành công!')
-                }else {
-                    console.log('Không tìm thấy sản phẩm!')
-                }
+                let index: number = +rl.question('Nhập dịch vụ muốn xoá: ');
+                user.remove(index);
+                console.log('Xoá thành công!')
                 break;
             case 2:
                 console.log('THANH TOÁN THÀNH CÔNG!!')

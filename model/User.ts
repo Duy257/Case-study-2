@@ -10,8 +10,7 @@ export class User {
     private _email: string;
     private _role: number = 0;
     private _time: number = 0;
-    private _cart = new Cart()
-    private idCart: number = 0;
+    private _cart = new Cart();
 
 
     constructor(nameAccount: string, password: string, name: string, age: number, email: string) {
@@ -95,9 +94,21 @@ export class User {
     }
 
     addToCart(t: Service) {
-        let id = this.idCart++;
-        t.id = id;
         this._cart.add(t);
     }
+
+    getCart(): Service[] {
+        return this._cart.arrService;
+    }
+
+    getTotalMoney(): number{
+        return this._cart.getTotalMoney();
+    }
+
+    remove(index: number) {
+        this._cart.remove(index);
+    }
+
+
 
 }

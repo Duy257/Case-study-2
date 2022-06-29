@@ -8,7 +8,6 @@ class User {
         this._role = 0;
         this._time = 0;
         this._cart = new Cart_1.Cart();
-        this.idCart = 0;
         this._nameAccount = nameAccount;
         this._password = password;
         this._name = name;
@@ -70,9 +69,16 @@ class User {
         this._cart = value;
     }
     addToCart(t) {
-        let id = this.idCart++;
-        t.id = id;
         this._cart.add(t);
+    }
+    getCart() {
+        return this._cart.arrService;
+    }
+    getTotalMoney() {
+        return this._cart.getTotalMoney();
+    }
+    remove(index) {
+        this._cart.remove(index);
     }
 }
 exports.User = User;

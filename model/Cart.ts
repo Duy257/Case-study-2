@@ -24,7 +24,6 @@ export class Cart {
     }
 
     add(t: Service): void {
-        this._totalMoney += t.price;
         this._arrService.push(t);
     }
 
@@ -47,5 +46,13 @@ export class Cart {
 
     remove(i: number) {
         this._arrService.splice(i, 1);
+    }
+
+    getTotalMoney(): number {
+        let totalMoney: number = 0;
+        for (let service of this._arrService) {
+            totalMoney += (service.price * service.amount)
+        }
+        return totalMoney;
     }
 }

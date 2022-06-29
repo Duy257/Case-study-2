@@ -19,7 +19,6 @@ class Cart {
         this._arrService = value;
     }
     add(t) {
-        this._totalMoney += t.price;
         this._arrService.push(t);
     }
     findByName(name) {
@@ -41,6 +40,13 @@ class Cart {
     }
     remove(i) {
         this._arrService.splice(i, 1);
+    }
+    getTotalMoney() {
+        let totalMoney = 0;
+        for (let service of this._arrService) {
+            totalMoney += (service.price * service.amount);
+        }
+        return totalMoney;
     }
 }
 exports.Cart = Cart;
