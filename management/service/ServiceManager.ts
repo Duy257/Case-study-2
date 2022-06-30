@@ -6,7 +6,6 @@ export class ServiceManager {
     private static id: number = 0;
 
      constructor() {
-         ServiceManager.arr.push(new Service('Mì trứng', 20000));
      }
 
      getAll() {
@@ -44,3 +43,6 @@ export class ServiceManager {
          return null;
      };
 }
+
+
+

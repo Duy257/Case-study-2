@@ -1,10 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ServiceManager = void 0;
-const Service_1 = require("../../model/Service");
 class ServiceManager {
     constructor() {
-        ServiceManager.arr.push(new Service_1.Service('Mì trứng', 20000));
     }
     getAll() {
         return ServiceManager.arr;

@@ -48,7 +48,7 @@ class LoginMenu {
     run() {
         let choice = -1;
         do {
-            console.log('---Chào mừng đến với net DUY NGUYỄN---');
+            console.log('---Chào mừng đến với net Duy Nguyễn---');
             console.log('1. Đăng nhập');
             console.log('2. Đăng ký');
             console.log('0. Thoát');
@@ -196,7 +196,7 @@ class LoginMenu {
     menuAdmin() {
         let choice = -1.;
         do {
-            console.log('---Đây là giao diện Admin---');
+            console.log('\n---Đây là giao diện Admin---');
             console.log('1. Hiển thị danh sách người dùng ');
             console.log('2. Tìm kiếm người dùng');
             console.log('3. Thêm dịch vụ ');
@@ -205,39 +205,39 @@ class LoginMenu {
             console.log('6. Danh sách máy');
             console.log('7. Bật tắt máy');
             console.log('8. Đổi mật khẩu');
-            console.log('0. Đăng xuất');
-            choice = +rl.question('Nhập lựa chọn của bạn: ');
+            console.log('0. Đăng xuất\n');
+            choice = +rl.question('Nhập lựa chọn của bạn: \n');
             switch (choice) {
                 case 1:
-                    console.log('---Danh sách người dùng---');
+                    console.log('\n---Danh sách người dùng---');
                     this.showAllUser();
                     break;
                 case 2:
-                    console.log('---Tìm kiếm---');
+                    console.log('\n---Tìm kiếm---');
                     this.search();
                     break;
                 case 3:
-                    console.log('---Thêm dịch vụ---');
+                    console.log('\n---Thêm dịch vụ---');
                     this.addService();
                     break;
                 case 4:
-                    console.log('---Hiển thị danh sách dịch vụ---');
+                    console.log('\n---Hiển thị danh sách dịch vụ---');
                     this.showAllService();
                     break;
                 case 5:
-                    console.log('---Nạp tiền---');
+                    console.log('\n---Nạp tiền---');
                     this.recharge();
                     break;
                 case 6:
-                    console.log('---Danh sách máy---');
+                    console.log('\n---Danh sách máy---');
                     this.showAllMachine();
                     break;
                 case 7:
-                    console.log('---Danh sách máy---');
+                    console.log('\n---Danh sách máy---');
                     this.changeStatus();
                     break;
                 case 8:
-                    console.log('---Đổi mật khẩu---');
+                    console.log('\n---Đổi mật khẩu---');
                     this.changePassword();
                     break;
             }
@@ -255,11 +255,11 @@ class LoginMenu {
         let search = rl.question('Nhập tên muốn tìm kiếm: ');
         let searchAccount = this.userManager.findByNameAccount(search);
         if (searchAccount) {
-            console.log('---Tài khoản cần tìm---');
+            console.log('\n---Tài khoản cần tìm---');
             console.log(searchAccount);
         }
         else {
-            console.log('Không tìm thấy tài khoản!');
+            console.log('\nKhông tìm thấy tài khoản!');
         }
     }
     //Thêm dịch vụ
@@ -272,7 +272,7 @@ class LoginMenu {
     }
     //Hiển thị danh sách dịch vụ
     showAllService() {
-        console.log('---Danh sách dịch vụ---');
+        console.log('\n---Danh sách dịch vụ---');
         let service = this.serviceManager.getAll();
         for (let i = 0; i < service.length; i++) {
             console.log(`  id: ${service[i].id}, Tên: ${service[i].name}, Giá: ${service[i].price}`);
@@ -288,7 +288,7 @@ class LoginMenu {
             console.log('Nạp thành công!');
         }
         else {
-            console.log('Không tìm thấy tài khoản!');
+            console.log('Không tìm thấy tài khoản!\n');
         }
     }
     //Danh sách máy
@@ -332,22 +332,23 @@ class LoginMenu {
         let user1 = user;
         let choice = -1;
         do {
-            console.log('---Xin mời chọn dịch vụ---');
+            console.log(`\n---Chào mừng ${user1.name}---`);
             console.log('1. Thông tin tài khoản của tôi');
             console.log('2. Gọi dịch vụ');
             console.log('3. Giỏ hàng');
             console.log('0. Đăng xuất');
-            choice = +rl.question('Nhập lựa chọn của bạn: ');
+            choice = +rl.question('Nhập lựa chọn của bạn: \n');
             switch (choice) {
                 case 1:
-                    console.log('---Tài khoản của tôi---');
+                    console.log('\n---Tài khoản của tôi---');
                     this.accountInformation(user1);
+                    break;
                 case 2:
-                    console.log('---Danh sách dịch vụ---');
+                    console.log('\n---Danh sách dịch vụ---');
                     this.selectService(user1);
                     break;
                 case 3:
-                    console.log('---Giỏ hàng của bạn---');
+                    console.log('\n---Giỏ hàng của bạn---');
                     this.pay(user1);
                     break;
                 default:
@@ -357,7 +358,32 @@ class LoginMenu {
     }
     //thông tin tài khoản của tôi
     accountInformation(user) {
+        let choice = -1;
         console.log(`      Tên: ${user.nameAccount}\n      Mật khẩu: ${user.password}\n      Tên: ${user.name}\n      email: ${user.email}\n      Tuổi: ${user.age}\n      Thời gian: ${user.time}`);
+        console.log('\n1. Đổi mật khẩu');
+        console.log('0. Thoát');
+        choice = +rl.question('Nhập lựa chọn của bạn: ');
+        switch (choice) {
+            case 1:
+                let check = true;
+                do {
+                    let oldPassword = rl.question('Nhập mật khẩu cũ: ');
+                    if (user.password == oldPassword) {
+                        let newPassword = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,10}$/g;
+                        let passWord = this.inputPassword(newPassword);
+                        user.password = passWord;
+                        console.log('Đổi mật khẩu thành công!\n');
+                        check = true;
+                    }
+                    else {
+                        console.log('Mật khẩu cũ không đúng!');
+                        check = false;
+                    }
+                } while (!check);
+                break;
+            case 2:
+                break;
+        }
     }
     //Gọi dịch vụ
     selectService(user) {
@@ -367,7 +393,7 @@ class LoginMenu {
             console.log(`${i}. Tên: ${service[i].name}, Giá: ${service[i].price}`);
         }
         let choice = -1;
-        console.log('1. Chọn dịch vụ');
+        console.log('\n1. Chọn dịch vụ');
         console.log('0. Thoát');
         choice = +rl.question('Nhập lựa chọn của bạn: ');
         switch (choice) {
@@ -380,16 +406,16 @@ class LoginMenu {
                         let amount = +rl.question('Nhập số lượng: ');
                         findService.amount += amount;
                         user.addToCart(findService);
-                        console.log('Thêm thành công!');
+                        console.log('Thêm thành công!\n');
                     }
                     else {
                         let amount = +rl.question('Nhập số lượng: ');
                         findService.amount += amount;
-                        console.log('Thêm thành công!');
+                        console.log('Thêm thành công!\n');
                     }
                 }
                 else {
-                    console.log('Không tìm thấy sản phẩm!');
+                    console.log('Không tìm thấy sản phẩm!\n');
                 }
                 break;
             case 0:
@@ -407,7 +433,7 @@ class LoginMenu {
         let totalMoney = user.getTotalMoney();
         console.log(`Tổng tiền: ${totalMoney}`);
         console.log();
-        console.log('---Tuỳ chọn---');
+        console.log('\n---Tuỳ chọn---');
         console.log('1. Xoá dịch vụ');
         console.log('2. Thay đổi số lượng');
         console.log('3. Thanh toán');
@@ -417,7 +443,7 @@ class LoginMenu {
             case 1:
                 let index = +rl.question('Nhập dịch vụ muốn xoá: ');
                 user.remove(index);
-                console.log('Xoá thành công!');
+                console.log('Xoá thành công!\n');
                 break;
             case 2:
                 let service = +rl.question('Sản phẩm muốn đổi: ');
@@ -425,14 +451,14 @@ class LoginMenu {
                 if (findToCart) {
                     let amount = +rl.question('Nhập số lượng muốn đổi: ');
                     findToCart.amount = amount;
-                    console.log('Thay đổi thành công!');
+                    console.log('Thay đổi thành công!\n');
                 }
                 else {
-                    console.log('bạn nhập sai sản phẩm!');
+                    console.log('bạn nhập sai sản phẩm!\n');
                 }
                 break;
             case 3:
-                console.log('THANH TOÁN THÀNH CÔNG!!');
+                console.log('THANH TOÁN THÀNH CÔNG!!\n');
                 break;
         }
         ;
