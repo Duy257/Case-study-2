@@ -362,19 +362,38 @@ class LoginMenu {
     //Gọi dịch vụ
     selectService(user) {
         let service = this.serviceManager.getAll();
+        let cartUser = user.getCart();
         for (let i = 0; i < service.length; i++) {
             console.log(`${i}. Tên: ${service[i].name}, Giá: ${service[i].price}`);
         }
-        let select = +rl.question('Nhập dịch vụ bạ chọn: ');
-        let findService = this.serviceManager.FindByIndex(select);
-        if (findService) {
-            let amount = +rl.question('Nhập số lượng: ');
-            findService.amount = amount;
-            user.addToCart(findService);
-            console.log('Thêm thành công!');
-        }
-        else {
-            console.log('Không tìm thấy sản phẩm!');
+        let choice = -1;
+        console.log('1. Chọn dịch vụ');
+        console.log('0. Thoát');
+        choice = +rl.question('Nhập lựa chọn của bạn: ');
+        switch (choice) {
+            case 1:
+                let select = +rl.question('Nhập dịch vụ bạ chọn: ');
+                let findService = this.serviceManager.FindByIndex(select);
+                if (findService) {
+                    let findByCart = user.findByCart(findService);
+                    if (!findByCart) {
+                        let amount = +rl.question('Nhập số lượng: ');
+                        findService.amount += amount;
+                        user.addToCart(findService);
+                        console.log('Thêm thành công!');
+                    }
+                    else {
+                        let amount = +rl.question('Nhập số lượng: ');
+                        findService.amount += amount;
+                        console.log('Thêm thành công!');
+                    }
+                }
+                else {
+                    console.log('Không tìm thấy sản phẩm!');
+                }
+                break;
+            case 0:
+                break;
         }
     }
     //Thanh toán

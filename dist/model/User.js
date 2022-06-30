@@ -89,5 +89,14 @@ class User {
             return null;
         }
     }
+    findByCart(t) {
+        let service = this._cart.findByCart(t);
+        if (service) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
 }
 exports.User = User;

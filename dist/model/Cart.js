@@ -51,5 +51,14 @@ class Cart {
     findByIndex(index) {
         return this._arrService[index];
     }
+    findByCart(t) {
+        let service = this._arrService.includes(t);
+        if (service) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
 }
 exports.Cart = Cart;

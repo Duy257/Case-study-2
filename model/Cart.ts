@@ -59,4 +59,13 @@ export class Cart {
     findByIndex(index: number): Service {
         return this._arrService[index];
     }
+
+    findByCart(t: Service): boolean {
+        let service = this._arrService.includes(t);
+        if (service) {
+            return true
+        }else {
+            return false
+        }
+    }
 }

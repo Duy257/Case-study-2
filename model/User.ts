@@ -117,4 +117,13 @@ export class User {
         }
     }
 
+    findByCart(t: Service): boolean {
+        let service = this._cart.findByCart(t)
+        if (service) {
+            return true
+        }else {
+            return false
+        }
+    }
+
 }
